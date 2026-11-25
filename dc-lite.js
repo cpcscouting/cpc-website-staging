@@ -89,7 +89,8 @@
       out.appendChild(ph);
       return;
     }
-    var el = document.createElement(node.tagName);
+    var ns = node.namespaceURI;
+    var el = (ns && ns !== 'http://www.w3.org/1999/xhtml') ? document.createElementNS(ns, node.localName) : document.createElement(node.tagName);
     var valueProp;
     Array.prototype.forEach.call(node.attributes, function (a) {
       var n = a.name;
