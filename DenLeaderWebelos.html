@@ -279,7 +279,7 @@ Fix this page
 <span style="width:56px;height:56px;border-radius:50%;background:#243E2C;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800">✓</span>
 <span style="font-family:'Helvetica Neue LT Std','Roboto Condensed',Arial,sans-serif;font-size:30px;font-weight:700;text-transform:uppercase;color:#003366;line-height:1.05">Thanks. It’s in the queue.</span>
 <p style="margin:0;font-size:16px;line-height:1.55">{{sentNote}}</p>
-<div style="background:#F4F1EA;border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.5;color:#515354">Request #{{ticket}} · {{pageTitle}}</div>
+<div style="background:#F4F1EA;border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.5;color:#515354">Request #{{ticket}} · {{pageTitle}}{{ticketFiles}}</div>
 <div style="display:flex;gap:10px;flex-wrap:wrap">
 <button type="button" onClick="{{again}}" style="font-family:inherit;font-size:15px;font-weight:700;padding:12px 18px;border-radius:6px;border:0;cursor:pointer;background:#ce1126;color:#FFFFFF">Fix something else</button>
 <button type="button" onClick="{{close}}" style="font-family:inherit;font-size:15px;font-weight:700;padding:10px 16px;border-radius:6px;border:2px solid #003366;cursor:pointer;background:#FFFFFF;color:#003366">Done</button>
@@ -311,15 +311,21 @@ Fix this page
 <span style="font-weight:700;color:#003366">How soon?</span>
 <div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{urg}}" as="u" hint-placeholder-count="3"><button type="button" onClick="{{u.pick}}" aria-pressed="{{u.on}}" style="{{u.style}}">{{u.label}}</button></sc-for></div>
 </div>
-<label style="display:flex;flex-direction:column;gap:8px;font-weight:700;color:#003366">Attach photos or PDFs (optional)
-<input type="file" multiple accept="image/*,.pdf,.webp,.heic" onChange="{{setFiles}}" style="font-family:inherit;font-size:14px;font-weight:400">
-<span style="font-size:13px;font-weight:400;color:#515354">{{filesNote}}</span>
-</label>
 </sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-weight:700;color:#003366">Attach documents or photos (optional)</span>
+<label style="position:relative;display:flex;align-items:center;gap:14px;border:2px dashed #9ab3d5;border-radius:10px;padding:14px 16px;background:#F7F9FC;cursor:pointer">
+<span aria-hidden="true" style="flex:none;width:44px;height:44px;border-radius:50%;background:#003366;display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5 12.5 20a5 5 0 0 1-7-7l9-9a3.3 3.3 0 0 1 4.7 4.7l-9 9a1.7 1.7 0 0 1-2.4-2.4L16 7.5"></path></svg></span>
+<span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:700;color:#003366">Drag files here or <span style="text-decoration:underline">browse</span></span><span style="font-size:13px;color:#515354">Word, Excel, PowerPoint, PDF, text or photos · up to 5 files, 10 MB each</span></span>
+<input type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.txt,.rtf,.odt,image/*,.heic,.webp" onChange="{{addFiles}}" aria-label="Attach documents or photos" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer">
+</label>
+<sc-for list="{{fileItems}}" as="f" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1px solid #E4DED1;border-radius:8px;padding:8px 10px"><span style="flex:none;font-size:11px;font-weight:800;letter-spacing:0.04em;color:#FFFFFF;background:{{f.color}};border-radius:4px;padding:4px 6px;min-width:38px;text-align:center">{{f.ext}}</span><span style="flex:1;min-width:0;font-size:14px;color:#1F2933;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{f.name}}</span><span style="flex:none;font-size:13px;color:#515354">{{f.size}}</span><button type="button" onClick="{{f.remove}}" aria-label="{{f.removeLabel}}" style="flex:none;font-family:inherit;font-size:13px;font-weight:700;color:#ce1126;background:none;border:0;cursor:pointer;padding:2px 4px">Remove</button></div></sc-for>
+<sc-if value="{{hasFileError}}" hint-placeholder-val="{{ false }}"><span role="alert" style="font-size:13px;font-weight:700;color:#ce1126">{{fileError}}</span></sc-if>
+</div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-<label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700;color:#003366">Your name<input type="text" value="{{who}}" onChange="{{setWho}}" style="font-family:inherit;font-size:15px;font-weight:400;border:1px solid #D6CEBD;border-radius:8px;padding:9px 10px"></label>
-<label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700;color:#003366">Email<input type="email" value="{{email}}" onChange="{{setEmail}}" style="font-family:inherit;font-size:15px;font-weight:400;border:1px solid #D6CEBD;border-radius:8px;padding:9px 10px"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700;color:#003366;min-width:0">Your name<input type="text" value="{{who}}" onChange="{{setWho}}" style="font-family:inherit;font-size:15px;font-weight:400;border:1px solid #D6CEBD;border-radius:8px;padding:9px 10px;width:100%;box-sizing:border-box;min-width:0"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700;color:#003366;min-width:0">Email<input type="email" value="{{email}}" onChange="{{setEmail}}" style="font-family:inherit;font-size:15px;font-weight:400;border:1px solid #D6CEBD;border-radius:8px;padding:9px 10px;width:100%;box-sizing:border-box;min-width:0"></label>
 </div>
 
 <details style="font-size:13px;color:#515354"><summary style="cursor:pointer;font-weight:700">Sent automatically with your request</summary>
@@ -470,29 +476,47 @@ class Component extends DCLogic {
       volunteerLabel: st.vol ? 'Turn off volunteer mode' : 'Turn on volunteer mode',
       volunteerNote: st.vol ? 'On in this browser for 90 days. Open any page in Play to see the tab.' : 'Off. Families never see the tab.',
       toggleVolunteer: () => this.toggleVol(),
-      openPublic: () => { this.setState({ pub: true, mode: 'form', target: null, type: '', text: '' }); },
-      startPoint: () => { this.setState({ pub: false, mode: 'point', target: null, type: '', text: '', files: [] }); this.startPointing(); },
+      openPublic: () => { this._files = []; this.setState({ pub: true, mode: 'form', target: null, type: '', text: '', files: [], fileError: '' }); },
+      startPoint: () => { this._files = []; this.setState({ pub: false, mode: 'point', target: null, type: '', text: '', files: [], fileError: '' }); this.startPointing(); },
       skipPoint: () => { this.stopPoint(); this.setState({ mode: 'form', target: null }); },
       repoint: () => { this.setState({ mode: 'point' }); this.startPointing(); },
       repointLabel: st.target ? 'Point at something else' : 'Point at a specific part',
       close: () => { this.stopPoint(); this.setState({ mode: 'idle', pub: false }); },
-      again: () => { this.setState({ mode: pub ? 'form' : 'point', target: null, type: '', text: '', files: [] }); if (!pub) this.startPointing(); },
+      again: () => { this._files = []; this.setState({ mode: pub ? 'form' : 'point', target: null, type: '', text: '', files: [], fileError: '' }); if (!pub) this.startPointing(); },
       targetLabel: tgt.label, targetSection: tgt.section, targetPath: tgt.path,
       types: T.map((l) => ({ label: l, on: type === l ? 'true' : 'false', style: chip(type === l), pick: () => this.setState({ type: l }) })),
       urg: ['Whenever', 'This week', 'Today: time-sensitive'].map((l) => ({ label: l, on: urg === l ? 'true' : 'false', style: chip(urg === l), pick: () => this.setState({ urg: l }) })),
       askLabel: pub ? 'What’s wrong?' : 'What should it say or do instead?',
-      askHint: pub ? 'e.g. The registration link goes to an error page.' : 'e.g. Change “April 14” to “April 21”. Or: replace this photo with the attached one.',
+      askHint: pub ? 'e.g. The registration link goes to an error page. A screenshot helps!' : 'e.g. Change “April 14” to “April 21”. Or: replace this flyer with the attached one.',
       text: st.text || '', setText: (e) => this.setState({ text: e.target.value }),
-      setFiles: (e) => this.setState({ files: Array.prototype.slice.call(e.target.files || []).map((f) => f.name) }),
-      filesNote: files.length ? files.join(', ') : 'Photos, flyers or PDFs you want added. Webp and HEIC are fine.',
+      addFiles: (e) => {
+        const MAX = 5, MB = 10;
+        const list = (this._files || []).slice(); let err = '';
+        Array.prototype.slice.call((e.target && e.target.files) || []).forEach((f) => {
+          if (list.some((g) => g.name === f.name && g.size === f.size)) return;
+          if (f.size > MB * 1024 * 1024) { err = f.name + ' is over ' + MB + ' MB. Try a smaller file, or email it to the website team.'; return; }
+          if (list.length >= MAX) { err = 'You can attach up to ' + MAX + ' files.'; return; }
+          list.push(f);
+        });
+        this._files = list; try { e.target.value = ''; } catch (x) {}
+        this.setState({ files: list.map((f) => ({ name: f.name, size: f.size })), fileError: err });
+      },
+      fileItems: files.map((f, i) => {
+        const ext = ((f.name.split('.').pop() || 'file') + '').toUpperCase().slice(0, 4);
+        const col = /PDF/.test(ext) ? '#ce1126' : /DOC|RTF|ODT|TXT/.test(ext) ? '#003366' : /XLS|CSV/.test(ext) ? '#243E2C' : /PPT/.test(ext) ? '#ff6200' : '#515354';
+        const kb = f.size / 1024;
+        return { name: f.name, ext: ext, color: col, size: kb > 1024 ? (kb / 1024).toFixed(1) + ' MB' : Math.max(1, Math.round(kb)) + ' KB', removeLabel: 'Remove ' + f.name,
+          remove: () => { const l = (this._files || []).slice(); l.splice(i, 1); this._files = l; this.setState({ files: l.map((g) => ({ name: g.name, size: g.size })), fileError: '' }); } };
+      }),
+      hasFileError: !!st.fileError, fileError: st.fileError || '',
       who: st.who || '', email: st.email || '',
       setWho: (e) => saveWho({ who: e.target.value }), setEmail: (e) => saveWho({ email: e.target.value }),
       pageTitle: info.title, pageUrl: info.url || '(live page address)', stamp: stamp,
       cantSend: !can,
       sendStyle: 'font-family:inherit;font-size:16px;font-weight:700;padding:12px 20px;border-radius:6px;border:0;cursor:' + (can ? 'pointer' : 'not-allowed') + ';background:' + (can ? '#ce1126' : '#D6CEBD') + ';color:#FFFFFF',
       sendHint: can ? 'Goes to the website team for approval.' : 'Pick a type and describe the change.',
-      submit: () => { if (!can) return; this.setState({ mode: 'sent', ticket: String(Math.floor(1000 + Math.random() * 9000)) }); },
-      ticket: st.ticket || '',
+      submit: () => { if (!can) return; this.setState({ mode: 'sent', sentFiles: files.length, ticket: String(Math.floor(1000 + Math.random() * 9000)) }); },
+      ticket: st.ticket || '', ticketFiles: st.sentFiles ? ' · ' + st.sentFiles + (st.sentFiles === 1 ? ' file' : ' files') + ' attached' : '',
       sentNote: pub ? 'Our team will take a look. Thanks for helping keep the site accurate.' : 'The website team reviews requests and approves them. You’ll get an email when the change is live.'
     };
   }
